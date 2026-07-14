@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRIYARAJ SINGH RATHORE // CYBER THREAT OPERATIONS HUB</title>
+    <style>
+        :root {
+            --bg-base: #030712;
+            --bg-surface: #0b0f19;
+            --accent: #10b981; /* Threat Level Green */
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --border: rgba(16, 185, 129, 0.15);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'SF Mono', Fira Code, Monaco, Consolas, monospace;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Scanline Texture Overlay */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            z-index: 9999;
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        /* Biometric Gate Screen Layer */
+        #gatekeeper {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #02040a;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .gate-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .biometric-scanner {
+            width: 80px; height: 80px;
+            border: 2px dashed var(--accent);
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .biometric-scanner::after {
+            content: '';
+            position: absolute;
+            width: 70%; height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            animation: scan 2s infinite ease-in-out;
+        }
+
+        @keyframes scan {
+            0%, 100% { top: 20%; }
+            50% { top: 80%; }
+        }
+
+        .hack-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .hack-btn:hover {
+            background: var(--accent);
+            color: var(--bg-base);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        /* Dashboard Application Workspace */
+        .app-container {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        header {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sys-info {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .sys-info span { color: var(--accent); }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            min-height: 0;
+        }
+
+        /* Sidebar Control Center */
+        .control-sidebar {
+            background: #080c14;
+            border-right: 1px solid var(--border);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nav-node {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            padding: 14px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            text-align: left;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .nav-node:hover, .nav-node.active {
+            color: #fff;
+            border-color: var(--accent);
+            background: rgba(16, 185, 129, 0.04);
+            transform: translateX(4px);
+        }
+
+        /* Interactive Shell Terminal Interface */
+        .terminal-workspace {
+            padding: 30px;
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 20px;
+            background: #020408;
+            min-height: 0;
+        }
+
+        .terminal-log-output {
+            overflow-y: auto;
+            padding-right: 10px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+
+        .terminal-input-bar {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 14px 20px;
+            border-radius: 3px;
+        }
+
+        .terminal-prefix {
+            color: var(--accent);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .terminal-field {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .interactive-tag {
+            color: var(--accent);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+    <!-- Security Gate Node Layout -->
+    <div id="gatekeeper">
+        <div class="gate-panel">
+            <h3 style="letter-spacing: 3px; margin-bottom: 10px;">SECURITY LOCK ENGAGED</h3>
+            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 15px;">AUTHENTICATE OR CORRUPT METRICS TO ACCESS INTERFACE</p>
+            <div class="biometric-scanner" onclick="bypassGate()"></div>
+            <div id="gateLogs" style="font-size: 0.7rem; color: #ef4444; height: 20px; margin-bottom: 10px;"></div>
+            <button class="hack-btn" onclick="bypassGate()">INITIALIZE BRUTE-FORCE</button>
+        </div>
+    </div>
+
+    <!-- Core Interactive App Workspace Topology -->
+    <div class="app-container" id="appFrame">
+        <header>
+            <div>
+                <h2 style="font-size: 1rem; letter-spacing: 4px;">PRIYARAJ SINGH RATHORE</h2>
+                <p style="font-size: 0.65rem; color: var(--text-secondary); letter-spacing: 1px;">OFFENSIVE INTEL SYSTEMS // COMPLIANCE VECTORS</p>
+            </div>
+            <div class="sys-info">SYSTEM DECK STATUS: <span>OPERATIONAL</span> // UTC ENGINE ACCELERATED</div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="control-sidebar">
+                <h4 style="font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 2px; margin-bottom: 10px;">SECTOR CONFIG</h4>
+                <button class="nav-node active" onclick="executeSystemMacro('identity', this)">01 // System Identity</button>
+                <button class="nav-node" onclick="executeSystemMacro('operations', this)">02 // Operations History</button>
+                <button class="nav-node" onclick="executeSystemMacro('spectrum', this)">03 // Capabilities Array</button>
+                <button class="nav-node" onclick="executeSystemMacro('projects', this)">04 // Active Deployments</button>
+                <button class="nav-node" onclick="executeSystemMacro('credentials', this)">05 // Verified Signatures</button>
+                
+                <div style="margin-top: auto; font-size: 0.7rem; color: var(--text-secondary); line-height: 1.6;">
+                    COM PORT: <span style="color:#fff;">+91 8690835978</span><br>
+                    SECURE INBOX: <a href="mailto:priyarajsinghrathore13@gmail.com" style="color: var(--accent); text-decoration: none;">priyarajsinghrathore13@gmail.com</a><br>
+                    <a href="https://www.linkedin.com/in/priyaraj-singh-rathore-40713931b" target="_blank" class="hack-btn" style="display:inline-block; padding: 6px 12px; font-size:0.65rem; margin-top:10px; text-decoration:none; text-align:center;">LinkedIn Handshake</a>
+                </div>
+            </div>
+
+            <div class="terminal-workspace">
+                <div class="terminal-log-output" id="shellConsole"></div>
+                <div class="terminal-input-bar">
+                    <span class="terminal-prefix">guest@priyaraj-rathore:~$</span>
+                    <input type="text" class="terminal-field" id="shellCmdInput" placeholder="Type 'help' or execute menu commands..." autofocus>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System Gate Security Access Automation
+        function bypassGate() {
+            const statusLog = document.getElementById('gateLogs');
+            statusLog.textContent = "ATTEMPTING EXPLOIT CORRUPTION...";
+            let progress = 0;
+            
+            const hackSequence = setInterval(() => {
+                progress += 25;
+                statusLog.textContent = `OVERFLOW BUFFER INJECTED: ${progress}%`;
+                if(progress >= 100) {
+                    clearInterval(hackSequence);
+                    document.getElementById('gatekeeper').style.opacity = '0';
+                    document.getElementById('gatekeeper').style.transform = 'translateY(-30px)';
+                    setTimeout(() => {
+                        document.getElementById('gatekeeper').style.display = 'none';
+                        const app = document.getElementById('appFrame');
+                        app.style.opacity = '1';
+                        app.style.transform = 'scale(1)';
+                        logToConsole(`System architecture initialized successfully.\nType <span class="interactive-tag" onclick="runTagCmd('help')">help</span> to view available terminal automation nodes.`, 'system');
+                    }, 600);
+                }
+            }, 200);
+        }
+
+        // Deep Text Repository Architecture Maps
+        const database = {
+            identity: `[IDENTITY MATRIX DOCUMENTATION]\n==================================================\nProfile Context : Aspiring Cyber Security Specialist & Advanced Penetration Tester.\nAcademic Focus  : Bachelor of Technology (B.Tech)\nInstitution     : Rajasthan Technical University (RTU), Kota, Rajasthan (2023 - Present)\nCIA Matrix Focus: Data Isolation Infrastructure, Enterprise Network Perimeter Hardening.`,
+            operations: `[OPERATIONAL DEPLOYMENT TREE]\n==================================================\nNODE 01: ASD ACADEMY // CYBER SECURITY SPECIALIST\nDuration: July 2023 - Operational Present\n- Conducted targeted network perimeter assessment scans via Kali sandbox environments.\n- Configured isolated local virtualization pipelines using professional hypervisor models (VMware).\n\nNODE 02: RAJASTHAN TECHNICAL UNIVERSITY // TEAM MANAGEMENT OPERATIONS\nDuration: January 2019 - Present\n- Standardized account execution methodologies to balance cross-functional tracking velocities.`,
+            spectrum: `[TECHNICAL SPECTRUM ARRAY]\n==================================================\nSECURITY FRAMEWORKS : Penetration Testing, Risk Vector Assessment, Access Control Verification\nDIAGNOSTIC ENGINES   : Wireshark, Maltego, Metasploit Framework, Nessus Scanner, Burp Suite, Nmap\nINFRASTRUCTURE CORE : Linux Sandbox Deployments, Windows Server Ecosystems, CCNA Topologies, VMware\nAUTOMATION SCRIPTS  : Python Core, C++, Bash Scripting, PowerShell Components, SQL Database Architectures\nCREATIVE PLATFORMS  : Adobe Premiere Pro, DaVinci Resolve Studio, Graphic Asset Design Layouts`,
+            projects: `[ACTIVE PIPELINE REGISTRY]\n==================================================\nPROJECT DELTA-01: MSME Infrastructure Portals (Horizon Track 2023 - 2027)\nPROJECT DELTA-02: Non-Linear Creative Production & Workflow Architecture Pipelines\nPROJECT DELTA-03: Small-to-Medium Regional Enterprise Full-Stack Brand Strategy Networks`,
+            credentials: `[VERIFIED AUTHENTICATION SIGNATURES]\n==================================================\nSIG-01: Cyber Security Associate Industrial Seal // Pregrad Matrix (3-Month Sequence)\nSIG-02: Cyber Security Specialization Diploma // ASD Academy Ecosystem\nSIG-03: Internet of Things (IoT) Architectural Framework // iStart Rajasthan Validation`
+        };
+
+        const consoleBuffer = document.getElementById('shellConsole');
+        const cmdInput = document.getElementById('shellCmdInput');
+
+        function logToConsole(text, mode = 'output') {
+            const containerNode = document.createElement('div');
+            if (mode === 'command') {
+                containerNode.innerHTML = `<span style="color: var(--accent);">guest@priyaraj-rathore:~$</span> ${text}`;
+            } else if (mode === 'system') {
+                containerNode.innerHTML = `<span style="color: #38bdf8;">[SYS_LOG]</span> ${text}`;
+            } else {
+                containerNode.innerHTML = text.replace(/\n/g, '<br>');
+            }
+            consoleBuffer.appendChild(containerNode);
+            consoleBuffer.scrollTop = consoleBuffer.scrollHeight;
+        }
+
+        function executeSystemMacro(key, btnRef) {
+            if(btnRef) {
+                document.querySelectorAll('.nav-node').forEach(node => node.classList.remove('active'));
+                btnRef.classList.add('active');
+            }
+            logToConsole(`cat /sectors/${key}.db`, 'command');
+            setTimeout(() => {
+                logToConsole(database[key]);
+            }, 150);
+        }
+
+        function runTagCmd(cmdText) {
+            cmdInput.value = cmdText;
+            processCommandString(cmdText);
+            cmdInput.value = '';
+        }
+
+        function processCommandString(rawString) {
+            const cleanCmd = rawString.trim().toLowerCase();
+            if(!cleanCmd) return;
+
+            logToConsole(rawString, 'command');
+
+            setTimeout(() => {
+                switch(cleanCmd) {
+                    case 'help':
+                        logToConsole(`Available Engine Modules:\n  <span class="interactive-tag" onclick="runTagCmd('identity')">identity</span>    - View core specialization specs\n  <span class="interactive-tag" onclick="runTagCmd('ops')">ops</span>         - View historical security operations\n  <span class="interactive-tag" onclick="runTagCmd('skills')">skills</span>      - Scan technical engineering matrix\n  <span class="interactive-tag" onclick="runTagCmd('clear')">clear</span>       - Clear shell console window history buffer`);
+                        break;
+                    case 'identity': executeSystemMacro('identity'); break;
+                    case 'ops': executeSystemMacro('operations'); break;
+                    case 'skills': executeSystemMacro('spectrum'); break;
+                    case 'clear':
+                        consoleBuffer.innerHTML = '';
+                        break;
+                    default:
+                        logToConsole(`Command configuration error: "${rawString}" not recognized by local shell ecosystem. Type 'help' for instructions.`, 'system');
+                }
+            }, 100);
+        }
+
+        cmdInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                processCommandString(cmdInput.value);
+                cmdInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
